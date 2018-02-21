@@ -43,6 +43,11 @@ public class QueueLE<E> {
 			throw new NoSuchElementException("No se puede hacer un next de una fila vacía");
 		}
 	}
+	
+	public String toString() {
+		return this.lista.toString();
+	}
+	
 	public static void main(String[] args) {
 		QueueLE<String> fila1 = new QueueLE();
 		

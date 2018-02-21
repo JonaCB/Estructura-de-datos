@@ -128,6 +128,7 @@ public class ListaEnlazada<E> {
 		}
 		return resultado;
 	}
+	
 	public static void main(String[] args) {
 		ListaEnlazada<Integer> lista = new ListaEnlazada<>();
 		lista.insertarInicio(20);
