@@ -1,3 +1,4 @@
+import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
 
 public class EvaluacionExpresiones {
@@ -9,10 +10,45 @@ public class EvaluacionExpresiones {
 	}
 	
 	public double evalua(String expresion) {
-		
+		QueueLE<String> cola = this.infixToPostfix();
+		StackLE<Double> pila = new StackLE<Double>();
+		int size = cola.size();
+		for(int i = 0; i<size; i++) {
+			String current = cola.dequeue();
+			try {
+				pila.push(Double.parseDouble(current));
+			}catch(NumberFormatException e) {
+				double val2 = pila.pop();
+				double val1 = pila.pop();
+				
+				switch(current){
+					case "+": {
+						pila.push(val1+val2);
+						break;
+					}
+					case "-":{
+						pila.push(val1-val2);
+						break;
+					}
+					case "*": {
+						pila.push(val1*val2);
+						break;
+					}
+					case "/": {
+						pila.push(val1/val2);
+						break;
+					}
+					case "^": {
+						pila.push(Math.pow(val1, val2));
+						break;
+					}
+				}
+			}
+		}
+		return pila.pop();
 	}
 	
-	private String infixToPostfix() {
+	private QueueLE<String> infixToPostfix() {
 		StackLE<String> pila = new StackLE<String>();
 		QueueLE<String> cola = new QueueLE<String>();
 		
@@ -22,11 +58,32 @@ public class EvaluacionExpresiones {
 				Integer.parseInt(token);
 				cola.enqueue(token);
 			}catch(NumberFormatException e) {
-				this.convert(pila, cola, token);
+				try {
+					if(pila.isEmpty()) {
+						pila.push(token);
+					}
+					else if(token.equals("(")) {
+						pila.push(token);
+					}
+					else if(token.equals(")")) {
+						while(!pila.isEmpty()) {
+							if(pila.top().equals("(")) {
+								break;
+							}
+							cola.enqueue(pila.pop());
+						}
+						if(pila.top().equals("(")) {
+							pila.pop();
+						}
+					}
+					else {
+						this.convert(pila, cola, token);
+					}
+				}catch(NoSuchElementException ex) {}
 			}
 		}
 		this.vaciar(pila, cola);
-		return cola.toString();
+		return cola;
 	}
 	
 	private void convert(StackLE<String> pila, QueueLE<String> cola, String token) {
@@ -46,16 +103,22 @@ public class EvaluacionExpresiones {
 	
 	private void vaciar(StackLE<String> pila, QueueLE<String> cola) {
 		while(!pila.isEmpty()) {
-			cola.enqueue(pila.pop());
+			try{
+				if(pila.top().equals("(")) {
+					pila.pop();
+				}
+				cola.enqueue(pila.pop());
+			}catch(NoSuchElementException e) {}
 		}
 	}
 	
 	public static void main(String[] args) {
-		String operacion = "0 * 1 + 2";
+		String operacion = "2 / 6 + 4 * 5 - 10";
 		Operador op = new Operador(operacion);
 		EvaluacionExpresiones ep = new EvaluacionExpresiones(operacion);
 		
 		System.out.println(ep.infixToPostfix());
+		System.out.println(ep.evalua(operacion));
 	}
 }
 
@@ -85,8 +148,6 @@ class Operador{
 	
 	public int prioridad(String s){
 		switch(s) {
-			case "(": return 0;
-			case ")": return -1;
 			case "+": return 1;
 			case "-": return 1;
 			case "*": return 2;
