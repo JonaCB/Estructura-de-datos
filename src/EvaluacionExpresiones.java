@@ -113,7 +113,7 @@ public class EvaluacionExpresiones {
 	}
 	
 	public static void main(String[] args) {
-		String operacion = "2 / 6 + 4 * 5 - 10";
+		String operacion = "4 ^ ( 1 / 2 )";
 		Operador op = new Operador(operacion);
 		EvaluacionExpresiones ep = new EvaluacionExpresiones(operacion);
 		
