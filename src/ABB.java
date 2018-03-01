@@ -39,16 +39,23 @@ public class ABB<E extends Comparable<E>> {
 			}
 		}
 	}
-	/*
+	
 	public E buscar(E dato) {
-		if(this.raiz.getValor().equals(dato)) {
-			return this.raiz.getValor();
+		NodoABB<E> tmp = this.raiz;
+		while(tmp != null) {
+			if(dato.equals(tmp.getValor())) {
+				return tmp.getValor();
+			}
+			else if(dato.compareTo(tmp.getValor())<0) {
+				tmp = tmp.getIzq();
+			}
+			else {
+				tmp = tmp.getDer();
+			}
 		}
-		else {
-			
-		}
+		return null;
 	}
-	*/
+	
 	public static void main(String[] args) {
 		ABB<Integer> a = new ABB<Integer>();
 		a.insertar(50);
@@ -59,6 +66,7 @@ public class ABB<E extends Comparable<E>> {
 		a.insertar(55);
 		a.insertar(80);
 		a.insertar(30);
+		System.out.println(a.buscar(31));
 	}
 }
 
