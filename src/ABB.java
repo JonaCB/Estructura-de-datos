@@ -58,43 +58,83 @@ public class ABB<E extends Comparable<E>> {
 	}
 	
 	public E eliminar(E dato) {
-		NodoABB<E> current = this.raiz,
-					parent=this.raiz;
-		
-		while(current!=null && current.getValor().equals(dato)) {
-			parent = current;
-			current = dato.compareTo(current.getValor())<0 ? current.getIzq():current.getDer();
+		if(dato.equals(this.raiz.getValor())) {
+			if(this.raiz.getDer() == null && this.raiz.getIzq() == null) {
+				this.raiz = null;
+			}
+			else if(this.raiz.getDer() == null) {
+				this.raiz = this.raiz.getIzq();
+			}
+			else if(this.raiz.getIzq() == null) {
+				this.raiz = this.raiz.getDer();
+			}
+			else{
+				NodoABB<E> predecesor = predecesor(this.raiz);
+				if(predecesor.getIzq()!=null) {
+					predecesor.getIzq().setIzq(this.raiz.getIzq());
+				}
+				predecesor.setDer(this.raiz.getDer());
+				this.raiz = predecesor;
+			}
+			this.size--;
+			return this.raiz.getValor();
 		}
-		//current es igual a null o current está en el nodo a borrar y parent en el anterior
-		if(current == null) {
-			throw new NoSuchElementException("No se encontró "+dato+" en el árbol");
+		else {
+			NodoABB<E> current = this.raiz,
+						parent=this.raiz;
+			
+			while(current!=null && !current.getValor().equals(dato)) {
+				parent = current;
+				current = dato.compareTo(current.getValor())<0 ? current.getIzq():current.getDer();
+			}
+			//current es igual a null o current está en el nodo a borrar y parent en el anterior
+			if(current == null) {
+				throw new NoSuchElementException("No se encontró "+dato+" en el árbol");
+			}
+			//Aquí sí está current en el nodo a borrar y parent en el anterior
+			if(current.getIzq() == null && current.getDer() == null) {
+				//Caso borrar un nodo hoja
+				if(parent.getIzq()==current) {
+					parent.setIzq(null);
+				}
+				else {
+					parent.setDer(null);
+				}
+			//Casos borrar con 1 hijo
+			}else if(current.getIzq() == null ) {
+				if(parent.getIzq()==current) {
+					parent.setIzq(current.getDer());
+				}
+				else {
+					parent.setDer(current.getDer());
+				}
+			}else if(current.getDer() == null) {
+				if(parent.getIzq()==current) {
+					parent.setIzq(current.getIzq());
+				}
+				else {
+					parent.setDer(current.getIzq());
+				}
+			}		
+			//Caso borrar con 2 hijos usando la técnica del predecesor
+			else {
+				NodoABB<E> tmp = predecesor(current);
+				if(tmp.getIzq()!=null) {
+					current.getIzq().setDer(tmp.getIzq());
+				}
+				
+				if(parent.getIzq()==current) {
+					parent.setIzq(tmp);
+					tmp.setDer(current.getDer());
+				}
+				else{
+					parent.setDer(tmp);
+					tmp.setDer(current.getDer());
+				}
+			}
+			this.size--;
+			return current.getValor();
 		}
-		//Aquí sí está current en el nodo a borrar y parent en el anterior
-		if(current.getIzq() == null && current.getDer() == null) {
-			//Caso borrar un nodo hoja
-			if(parent.getIzq()==current) {
-				parent.setIzq(null);
-			}
-			else {
-				parent.setDer(null);
-			}
-		//Casos borrar con 1 hijo
-		}else if(current.getIzq() == null ) {
-			if(parent.getIzq()==current) {
-				parent.setIzq(current.getDer());
-			}
-			else {
-				parent.setDer(current.getDer());
-			}
-		}else if(current.getDer() == null) {
-			if(parent.getIzq()==current) {
-				parent.setIzq(current.getIzq());
-			}
-			else {
-				parent.setDer(current.getIzq());
-			}
-		}		
-		//Caso borrar con 2 hijos usando la técnica del predecesor
 	}
 	
 	private NodoABB<E> predecesor(NodoABB<E> nodo){
@@ -116,8 +156,11 @@ public class ABB<E extends Comparable<E>> {
 		a.insertar(55);
 		a.insertar(80);
 		a.insertar(30);
+		a.insertar(5);
+		a.insertar(8);
+		
 		System.out.println(a.buscar(30));
-		a.eliminar(30);
+		a.eliminar(25);
 		//System.out.println();
 	}
 }
