@@ -62,19 +62,18 @@ public class ABB<E extends Comparable<E>> {
 			if(this.raiz.getDer() == null && this.raiz.getIzq() == null) {
 				this.raiz = null;
 			}
-			else if(this.raiz.getDer() == null) {
-				this.raiz = this.raiz.getIzq();
-			}
 			else if(this.raiz.getIzq() == null) {
 				this.raiz = this.raiz.getDer();
 			}
+			else if(this.raiz.getDer() == null) {
+				this.raiz = this.raiz.getIzq();
+			}
 			else{
 				NodoABB<E> predecesor = predecesor(this.raiz);
-				if(predecesor.getIzq()!=null) {
-					predecesor.getIzq().setIzq(this.raiz.getIzq());
-				}
-				predecesor.setDer(this.raiz.getDer());
-				this.raiz = predecesor;
+				E datoPredecesor = predecesor.getValor();
+				eliminar(datoPredecesor);
+				this.size++;
+				this.raiz.setValor(datoPredecesor);
 			}
 			this.size--;
 			return this.raiz.getValor();
@@ -146,22 +145,85 @@ public class ABB<E extends Comparable<E>> {
 		return current;
 	}
 	
+	public void preorden() {
+		this.preorden(this.raiz);
+		System.out.println();
+	}
+	
+	private void preorden(NodoABB<E> nodo) {
+		if(nodo!=null) {
+			System.out.print(nodo+",");
+			this.preorden(nodo.getIzq());
+			this.preorden(nodo.getDer());
+		}
+	}
+	
+	public void inorden() {
+		this.inorden(this.raiz);
+		System.out.println();
+	}
+	
+	private void inorden(NodoABB<E> nodo) {
+		if(nodo!= null) {
+			this.inorden(nodo.getIzq());
+			System.out.print(nodo+",");
+			this.inorden(nodo.getDer());
+		}
+	}
+	
+	public void postorden() {
+		this.postorden(this.raiz);
+		System.out.println();
+	}
+	
+	private void postorden(NodoABB<E> nodo) {
+		if(nodo!=null) {
+			this.postorden(nodo.getIzq());
+			this.postorden(nodo.getDer());
+			System.out.print(nodo+",");
+		}
+	}
+	
+	public void nivel(){
+		QueueLE<NodoABB<E>> cola = new QueueLE<NodoABB<E>>();
+		if(this.raiz!=null) {
+			cola.enqueue(this.raiz);
+		}
+		while(!cola.isEmpty()) {
+			NodoABB<E> tmp = cola.dequeue();
+			System.out.print(tmp+",");
+			if(tmp.getIzq()!=null) {
+				cola.enqueue(tmp.getIzq());
+			}
+			if(tmp.getDer()!=null) {
+				cola.enqueue(tmp.getDer());
+			}
+		}
+		System.out.println();
+	}
+	
 	public static void main(String[] args) {
 		ABB<Integer> a = new ABB<Integer>();
-		a.insertar(50);
-		a.insertar(25);
-		a.insertar(60);
+		a.insertar(21);
+		a.insertar(13);
 		a.insertar(10);
-		a.insertar(40);
-		a.insertar(55);
-		a.insertar(80);
+		a.insertar(18);
+		a.insertar(33);
+		a.insertar(25);
+		a.insertar(29);
+		a.insertar(27);
 		a.insertar(30);
-		a.insertar(5);
-		a.insertar(8);
-		
-		System.out.println(a.buscar(30));
-		a.eliminar(25);
-		//System.out.println();
+		a.insertar(40);
+		System.out.print("Preorden: ");
+		a.preorden();
+		System.out.print("Inorden: ");
+		a.inorden();
+		System.out.print("Postorden: ");
+		a.postorden();
+		System.out.print("Nivel: ");
+		a.nivel();
+		a.eliminar(21);
+		a.nivel();
 	}
 }
 

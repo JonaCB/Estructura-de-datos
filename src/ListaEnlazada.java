@@ -45,6 +45,19 @@ public class ListaEnlazada<E> {
 		return(this.size == 0);
 	}
 	
+	public E getAt(int pos) {
+		if(pos >= 0 && pos < this.size) {
+			Nodo<E> current = this.inicio;
+			for(int i = 0; i<pos; i++) {
+				current = current.getNext();
+			}
+			return current.getDato();
+		}
+		else {
+			throw new IllegalArgumentException("");
+		}
+	}
+	
 	public void insertarInicio(E dato) {
 		Nodo<E> nodoTmp = new Nodo<E>(dato, this.inicio);
 		this.inicio = nodoTmp;
@@ -96,7 +109,6 @@ public class ListaEnlazada<E> {
 				}
 				current.setNext(null);
 				this.fin = current;
-				this.fin = null;
 				this.size--;
 				return tmp;
 			}

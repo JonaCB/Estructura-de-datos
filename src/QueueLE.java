@@ -49,8 +49,7 @@ public class QueueLE<E> {
 	}
 	
 	public static void main(String[] args) {
-		QueueLE<String> fila1 = new QueueLE();
-		
+		QueueLE<String> fila1 = new QueueLE<String>();
 		String[] nombres = {"Hector", "Elías", "Kevin", "Eutimio", "Quirino", "Donovan", "Arturo"};
 		for(String nombre:nombres) {
 			fila1.enqueue(nombre);
