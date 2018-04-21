@@ -83,6 +83,31 @@ public class ListaEnlazada<E> {
 		
 	}
 	
+	public E borrarEn(int pos) {
+		if(pos >= 0 && pos < this.size) {
+			if(pos == 0) {
+				return this.borrarInicio();
+			}
+			else if(pos == this.size-1) {
+				return this.borrarFin();
+			}
+			else {
+				Nodo<E> current = this.inicio;
+				Nodo<E> parent = this.inicio;
+				for(int i = 0; i<pos; i++) {
+					parent = current;
+					current = current.getNext();
+				}
+				parent.setNext(current.getNext());
+				this.size--;
+				return current.getDato();
+			}
+		}
+		else {
+			throw new IllegalArgumentException("");
+		}
+	}
+	
 	public E borrarInicio() throws NoSuchElementException{
 		try{
 			E tmp = this.inicio();
@@ -146,6 +171,11 @@ public class ListaEnlazada<E> {
 		lista.insertarInicio(20);
 		lista.insertarInicio(10);
 		lista.insertarInicio(5);
+		System.out.println(lista);
+		System.out.println(lista.size());
+		lista.borrarEn(0);
+		System.out.println(lista);
+		System.out.println(lista.size());
 		System.out.println(lista);
 		lista.setAt(1, 100);
 		System.out.println(lista);
